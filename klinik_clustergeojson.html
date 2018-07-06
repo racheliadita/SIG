@@ -1,0 +1,231 @@
+<html>
+<head>
+    <header>
+        <title>SIG Pusat Kesehatan</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+        <table>
+            <tr>
+            <td>
+                <img src="https://png.pngtree.com/element_origin_min_pic/04/05/20/1657299a30b925e.jpg" style="width:90px;height:90px;margin:20px;">
+            </td>
+            <td>
+                <h1 style="color:white">SIG Pusat Layanan Kesehatan</h1>
+                <h3 style="color:white">Kota Bandarlampung</h3>
+            </td>
+            </tr>
+        </table>
+    </header>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+    header,footer{
+    font-family: Century Gothic;
+    background-color: rgb(22, 22, 22);
+    padding: 20px;
+}
+
+html, body {
+        font-family: Arial, Helvetica, sans-serif;
+        color: black;
+        background-color: rgb(231, 82, 82);
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        text-align: center;
+}
+#map {
+    margin-left: 15%;
+    background-color: gray;
+    width: 70%;
+    height: 450px;
+}
+
+.navbar {
+    overflow: hidden;
+    background-color:  rgb(14, 13, 13);
+    font-family: Arial, Helvetica, sans-serif;
+    width: 100%;
+}
+
+.navbar a {
+    float: left;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.dropdown {
+    float: left;
+    overflow: hidden;
+}
+
+.dropdown .dropbtn {
+    font-size: 16px;    
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+}
+
+.navbar a:hover, .dropdown:hover .dropbtn {
+    background-color: brown;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+    </style>
+</head>
+<script src="http://maps.googleapis.com/maps/api/js"></script>
+
+<body>
+    <div class="navbar">
+        <a href="home.html">Home</a>
+        <a href="geojson.html">Peta Persebaran</a>
+        <div class="dropdown">
+            <button class="dropbtn">Tipe Layanan Kesehatan
+            <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a href="rs_clustergeojson.html">Rumah Sakit</a>
+                <a href="klinik_clustergeojson.html">Klinik</a>
+                <a href="puskesmas_clustergeojson.html">Puskesmas</a>
+            </div>      
+        </div> 
+        <a href="legenda.html">Pembagian Wilayah</a>
+        <a href="api_direction.html">Petunjuk Arah</a>
+        <a href="search.html">Pencarian</a>
+        <a href="overlay.html">Overlay</a>
+        <a href="contact.html">Contact</a>
+</div>
+<br><br>
+
+    <div id = "map"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase.js"></script>
+    <script>
+    var map = null;
+    var center = {lat: -5.387218, lng: 105.261122};
+    var infowindow;
+
+    var config = {
+                apiKey: "AIzaSyBec0nlugp5nDFWCreYwn_M8eg61DeFK0o",
+                authDomain: "geojson-85d68.firebaseapp.com",
+                databaseURL: "https://geojson-85d68.firebaseio.com",
+                projectId: "geojson-85d68",
+                storageBucket: "",
+                messagingSenderId: "858318694931"
+                };
+                firebase.initializeApp(config);
+
+    var db = firebase.database();
+    var dataRef = db.ref('bandar_lampung');
+
+    dataRef.on('value', showData, showError);
+    function showData(data){
+        // console.log(data.val());
+        map.data.addGeoJson(data.val());
+        map.data.setStyle({
+            fillColor: 'yellow',
+            strokeWeight: 0.3
+        });
+        map.data.addListener('click', function(event){
+            infoWindowContent = event.feature.getProperty('DESA');
+            infowindow.setContent(infoWindowContent);
+            infowindow.setPosition(event.latLng);
+            infowindow.open(map);
+        });
+    }
+    function showError(err){
+        console.log(err);
+    }
+
+    function initMap(){
+        var lampung={lat: -4.558585, lng: 105.406808};
+        map = new google.maps.Map(document.getElementById('map'),{
+            zoom: 12,
+            center: center
+        });
+        var infoWin = new google.maps.InfoWindow();
+	// Add some markers to the map.
+	// Note: The code uses the JavaScript Array.prototype.map() method to
+	// create an array of markers based on a given "locations" array.
+	// The map() method here has nothing to do with the Google Maps API.
+	var markers = locations.map(function(location, i) {
+    var marker = new google.maps.Marker({
+        position: location,
+        animation: google.maps.Animation.DROP,
+        icon: "images/klinik.png"
+    });
+
+    google.maps.event.addListener(marker, 'click', function(evt){
+	    infoWin.setContent(location.info);
+	    infoWin.open(map, marker);
+	})
+    return marker;
+	});
+    // Add a marker clusterer to manage the markers.
+	var markerCluster = new MarkerClusterer(map, markers, {
+    imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+	});
+    }
+    var locations = [
+        {lat: -5.418962, lng: 105.259345, info: "<h3>Klinik THT Handayani</h3><br><p>Alamat: JL. Sriwijaya, 15, Bandarlampung, 35118, Enggal, Engal, Bandar Lampung City, Lampung 35213<br><p>Telp: (0721) 254393 <br>"}, 
+        {lat: -5.424903, lng: 105.258611, info: "<h3>Klinik Medika</h3><br><p>Alamat: Jl. P Diponegoro No.156, Enggal, Engal, Kota Bandar Lampung, Lampung 35214<br><p>Telp: (0721) 482218 <br>"}, 
+        {lat: -5.401656, lng: 105.260824, info: "<h3>Klinik Sejahtera</h3><br><p>Alamat: Jl. Teuku Umar No.80 B, Penengahan, Tj. Karang Pusat, Kota Bandar Lampung, Lampung 35112<br><p>Telp: (0721) 781701 <br>"},
+        {lat: -5.452108, lng: 105.260672, info: "<h3>Klinik Griya Medika</h3><br><p>Alamat: Jl. Ikan Kembung No.59A, Pesawahan, Tlk. Betung Sel., Kota Bandar Lampung, Lampung 35221<br><p>Telp: - <br>"},
+        {lat: -5.363981, lng: 105.235013, info: "<h3>Klinik Kosasih Rajabasa</h3><br><p>Alamat: IX No. 31, Jl. Kapten Abdul Haq, Rajabasa, Kota Bandar Lampung, Lampung 35142<br><p>Telp: 0811 7270 557 <br>"},
+        {lat: -5.392716, lng: 105.219549, info: "<h3>Klinik Kemiling Sehat</h3><br><p>Alamat: Jl. Imam Bonjol, No. 1B/E, Kemiling, Sumber Rejo, Kemiling, Kota Bandar Lampung, Lampung 35127<br><p>Telp: (0721) 7033012 <br>"},
+        {lat: -5.364133, lng: 105.256670, info: "<h3>Klinik Untung Medika</h3><br><p>Alamat: Jl. Untung Suropati No.31, Labuhan Ratu, Kedaton, Kota Bandar Lampung, Lampung 35142<br><p>Telp: (0721) 8014400 <br>"},
+        {lat: -5.355843, lng: 105.254396, info: "<h3>Klinik Bersalin Sri Rezeki</h3><br><p>Alamat:Jl. Mawar No. 17, Labuhan Dalam, Tanjung Senang, Labuhan Dalam, Tj. Senang, Kota Bandar Lampung, Lampung 35141<br><p>Telp: (0721) 254513 <br>"},
+        {lat: -5.379386, lng: 105.264910, info: "<h3>Klinik Keluarga</h3><br><p>Alamat: JL P. Tirtayasa, No. 37 B, Sukabumi, Sepang Jaya, Kedaton, Kota Bandar Lampung, Lampung 35122<br><p>Telp: (0721) 289335 <br>"}, 
+        {lat: -5.384306, lng: 105.258361, info: "<h3>Klinik Ummi HC Kedaton</h3><br><p>Alamat: Jl. Pagar Alam No.19, Kedaton, Kota Bandar Lampung, Lampung 35148<br><p>Telp: (0721) 787509 <br>"}, 
+        {lat: -5.383060, lng: 105.275081, info: "<h3>Klinik Tangkas</h3><br><p>Alamat: Jl. Griya Mustika No.23, Way Halim Permai, Way Halim, Kota Bandar Lampung, Lampung 35131<br><p>Telp: (0721) 7313387 <br>"}, 
+        {lat: -5.378617, lng: 105.253023, info: "<h3>Poliklinik Gatam</h3><br><p>Alamat: Jl. Zainal Abidin Pagar Alam No.448, Labuhan Ratu, Kedaton, Kota Bandar Lampung, Lampung 35142<br><p>Telp: 0852-9637-4672 <br>"}, 
+        {lat: -5.383402, lng: 105.275424, info: "<h3>Klinik YPS</h3><br><p>Alamat: Jl. Griya Utama No.50, Way Halim Permai, Way Halim, Kota Bandar Lampung, Lampung 35132<br><p>Telp: 0813-2345-5557 <br>"}, 
+        {lat: -5.386735, lng: 105.263494, info: "<h3>Klinik Kosasih Urip</h3><br><p>Alamat: Jalan Letnan Jendral Urip Sumoharjo No. 176, Surabaya, Kedaton, Surabaya, Kedaton, Kota Bandar Lampung, Lampung 35132<br><p>Telp: 0811-7270-556 <br>"}, 
+        {lat: -5.392289, lng: 105.271133, info: "<h3>Klinik Pratama</h3><br><p>Alamat: Jl. Gn. Sulah, Way Halim, Kota Bandar Lampung, Lampung 35122<br><p>Telp: - <br>"}, 
+        {lat: -5.397160, lng: 105.277913, info: "<h3>Klinik Bekam BHC</h3><br><p>Alamat: Jl. P. Buton Raya No.20, Jagabaya III, Way Halim, Kota Bandar Lampung, Lampung 35122<br><p>Telp: 0815-3232-7381 <br>"}, 
+        {lat: -5.391349, lng: 105.281175, info: "<h3>Klinik Dokter Henni Kartika Sp.OG</h3><br><p>Alamat: Jl. Arif Rahman Hakim No.36, Jagabaya III, Way Halim, Kota Bandar Lampung, Lampung 35122<br><p>Telp: 0812-7292-1904 <br>"} 
+              ]
+	google.maps.event.addDomListener(window, "load", initMap);
+	</script>
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAyzRiYQigoKlPdVkq_LjxjhRDePNVOC7Y&callback=initMap"></script>    
+    <script src="src/markerclusterer.js">
+    </script>
+    
+<br><br>
+<footer style="color:white">1617051127 | 1657051001 | 1657051026</footer>
+</body>
+</html>
