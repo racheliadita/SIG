@@ -1,0 +1,227 @@
+<html>
+<head>
+    <header>
+        <title>SIG Pusat Kesehatan</title>
+        <table>
+            <tr>
+            <td>
+                <img src="https://png.pngtree.com/element_origin_min_pic/04/05/20/1657299a30b925e.jpg" style="width:90px;height:90px;margin:20px;">
+            </td>
+            <td>
+                <h1 style="color:white">SIG Pusat Layanan Kesehatan</h1>
+                <h3 style="color:white">Kota Bandarlampung</h3>
+            </td>
+            </tr>
+        </table>
+    </header>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+    header,footer{
+    font-family: Century Gothic;
+    background-color: rgb(22, 22, 22);
+    padding: 20px;
+}
+
+html, body {
+        font-family: Arial, Helvetica, sans-serif;
+        color: black;
+        background-color: rgb(231, 82, 82);
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        text-align: center;
+}
+#map {
+    margin-left: 15%;
+    background-color: gray;
+    width: 70%;
+    height: 450px;
+}
+
+.navbar {
+    overflow: hidden;
+    background-color:  rgb(14, 13, 13);
+    font-family: Arial, Helvetica, sans-serif;
+    width: 100%;
+}
+
+.navbar a {
+    float: left;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.dropdown {
+    float: left;
+    overflow: hidden;
+}
+
+.dropdown .dropbtn {
+    font-size: 16px;    
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+}
+
+.navbar a:hover, .dropdown:hover .dropbtn {
+    background-color: brown;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+    </style>
+  </head>
+    <script src="http://maps.googleapis.com/maps/api/js"></script>
+
+    <div class="navbar">
+        <a href="home.html">Home</a>
+        <a href="geojson.html">Peta Persebaran</a>
+        <div class="dropdown">
+            <button class="dropbtn">Tipe Layanan Kesehatan
+            <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a href="rs_clustergeojson.html">Rumah Sakit</a>
+                <a href="klinik_clustergeojson.html">Klinik</a>
+                <a href="puskesmas_clustergeojson.html">Puskesmas</a>
+            </div>      
+        </div> 
+        <a href="legenda.html">Pembagian Wilayah</a>
+        <a href="api_direction.html">Petunjuk Arah</a>
+        <a href="search.html">Pencarian</a>
+        <a href="overlay.html">Overlay</a>
+        <a href="contact.html">Contact</a>
+</div>
+<br><br>
+
+        <div id="floating-panell">
+                <b><font  color= "white">Mode Perjalanan</b></font>
+                <select id="mode">
+                  <option value="DRIVING">Naik Mobil</option>
+                  <option value="WALKING">Jalan Kaki</option>
+                </select>
+        </div>
+        <br><br>
+
+        <div id="map"></div>
+        <div id="right-panel"></div>
+
+    <div id="floating-panel">
+      <strong>Start:</strong>
+      <select id="start">
+        <option value="JL. Sriwijaya, 15, Bandarlampung, 35118, Enggal, Engal, Bandar Lampung City, Lampung 35213<br><p>Telp: (0721) 254393 ">Klinik THT Handayani</option>
+        <option value="Jl. P Diponegoro No.156, Enggal, Engal, Kota Bandar Lampung, Lampung 35214<br><p>Telp: (0721) 482218 <br>">Klinik Medika</option>
+        <option value="Jl. Teuku Umar No.80 B, Penengahan, Tj. Karang Pusat, Kota Bandar Lampung, Lampung 35112<br><p>Telp: (0721) 781701 <br>">Klinik Sejahtera</option>
+        <option value="Jl. Ikan Kembung No.59A, Pesawahan, Tlk. Betung Sel., Kota Bandar Lampung, Lampung 35221<br><p>Telp: (0721) 781701 <br>">Klinik Griya Medika</option>
+        <option value="Jl. Kapten Abdul Haq, Rajabasa, Kota Bandar Lampung, Lampung 35142<br><p>Telp: 0811 7270 557 <br>">Klinik Kosasih Rajabasa</option>
+        <option value="Jl. Teuku Umar No.62, Sawah Brebes, Tj. Karang Tim., Kota Bandar Lampung, Lampung 35121<br><p>Telp: - <br>">Puskesmas Rawat Inap Kedaton</option>
+        <option value="Jl. Kamboja No.32, Enggal, Engal, Kota Bandar Lampung, Lampung 35128<br><p>Telp: (0721) 255074 <br>">Puskesmas Kebun Jahe Enggal</option>
+        <option value="Jl. Sisingamangaraja, Gedong Air, Tj. Karang Bar., Kota Bandar Lampung, Lampung 35118<br><p>Telp: - <br>">Puskesmas Gedong Air</option>
+        <option value="Jl. Tlk. Ratai No.16, Kota Karang, Tlk. Betung Tim., Kota Bandar Lampung, Lampung 35231<br><p>Telp: (0721) 480129 <br>">Puskesmas Rawat Inap Kota Karang</option>
+        <option value="Jl. Soekarno - Hatta No.1, Way Dadi, Sukarame, Way Dadi, Sukarame, Way Dadi, Sukarame, Kota Bandar Lampung, Lampung 35133<br><p>Telp: (0721) 704900">RS Imanuel</option>
+        <option value="Jl. Teuku Umar No .48, Sidodadi, Kedaton, Surabaya, Kedaton, Kota Bandar Lampung, Lampung 35148<p>Telp: (0721) 703459<br>">RS Advent</option>
+        <option value="Jl. Urip Sumoharjo No. 200, Gunung Sulah, Way Halim, Gn. Sulah, Way Halim, Kota Bandar Lampung, Lampung 35132<p>Telp: (0721) 771323">RS Urip Sumoharjo</option>  
+      </select>
+
+      <br>
+      <strong>End:</strong>
+      <select id="end">
+        <option value="JL. Sriwijaya, 15, Bandarlampung, 35118, Enggal, Engal, Bandar Lampung City, Lampung 35213<br><p>Telp: (0721) 254393 ">Klinik THT Handayani</option>
+            <option value="Jl. P Diponegoro No.156, Enggal, Engal, Kota Bandar Lampung, Lampung 35214<br><p>Telp: (0721) 482218 <br>">Klinik Medika</option>
+            <option value="Jl. Teuku Umar No.80 B, Penengahan, Tj. Karang Pusat, Kota Bandar Lampung, Lampung 35112<br><p>Telp: (0721) 781701 <br>">Klinik Sejahtera</option>
+            <option value="Jl. Ikan Kembung No.59A, Pesawahan, Tlk. Betung Sel., Kota Bandar Lampung, Lampung 35221<br><p>Telp: (0721) 781701 <br>">Klinik Griya Medika</option>
+            <option value="Jl. Kapten Abdul Haq, Rajabasa, Kota Bandar Lampung, Lampung 35142<br><p>Telp: 0811 7270 557 <br>">Klinik Kosasih Rajabasa</option>
+            <option value="Jl. Teuku Umar No.62, Sawah Brebes, Tj. Karang Tim., Kota Bandar Lampung, Lampung 35121<br><p>Telp: - <br>">Puskesmas Rawat Inap Kedaton</option>
+            <option value="Jl. Kamboja No.32, Enggal, Engal, Kota Bandar Lampung, Lampung 35128<br><p>Telp: (0721) 255074 <br>">Puskesmas Kebun Jahe Enggal</option>
+            <option value="Jl. Sisingamangaraja, Gedong Air, Tj. Karang Bar., Kota Bandar Lampung, Lampung 35118<br><p>Telp: - <br>">Puskesmas Gedong Air</option>
+            <option value="Jl. Tlk. Ratai No.16, Kota Karang, Tlk. Betung Tim., Kota Bandar Lampung, Lampung 35231<br><p>Telp: (0721) 480129 <br>">Puskesmas Rawat Inap Kota Karang</option>
+            <option value="Jl. Soekarno - Hatta No.1, Way Dadi, Sukarame, Way Dadi, Sukarame, Way Dadi, Sukarame, Kota Bandar Lampung, Lampung 35133<br><p>Telp: (0721) 704900">RS Imanuel</option>
+            <option value="Jl. Teuku Umar No .48, Sidodadi, Kedaton, Surabaya, Kedaton, Kota Bandar Lampung, Lampung 35148<p>Telp: (0721) 703459<br>">RS Advent</option>
+            <option value="Jl. Urip Sumoharjo No. 200, Gunung Sulah, Way Halim, Gn. Sulah, Way Halim, Kota Bandar Lampung, Lampung 35132<p>Telp: (0721) 771323">RS Urip Sumoharjo</option>
+        </select>
+    </div>
+    <br><br>
+    <footer style="color:white">1617051127 | 1657051001 | 1657051026</footer>
+
+    <script>
+      function initMap() {
+        var directionsDisplay = new google.maps.DirectionsRenderer;
+        var directionsService = new google.maps.DirectionsService;
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 7,
+          center: {lat:-5.375130, lng:105.253640}
+        });
+        directionsDisplay.setMap(map);
+        directionsDisplay.setPanel(document.getElementById('right-panel'));
+
+        
+
+        var control = document.getElementById('floating-panel');
+        control.style.display = 'block';
+        map.controls[google.maps.ControlPosition.TOP_CENTER].push(control);
+
+        var onChangeHandler = function() {
+          calculateAndDisplayRoute(directionsService, directionsDisplay);
+        };
+        calculateAndDisplayRoute(directionsService, directionsDisplay);
+        document.getElementById('mode').addEventListener('change', function() {
+          calculateAndDisplayRoute(directionsService, directionsDisplay);
+        });
+        document.getElementById('start').addEventListener('change', onChangeHandler);
+        document.getElementById('end').addEventListener('change', onChangeHandler);
+      }
+
+      function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+        var start = document.getElementById('start').value;
+        var end = document.getElementById('end').value;
+        var selectedMode = document.getElementById('mode').value;
+        directionsService.route({
+          origin: start,
+          destination: end,
+          travelMode: google.maps.TravelMode[selectedMode]
+        }, function(response, status) {
+          if (status === 'OK') {
+            directionsDisplay.setDirections(response);
+          } else {
+            window.alert('Directions request failed due to ' + status);
+          }
+        });
+      }
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAyzRiYQigoKlPdVkq_LjxjhRDePNVOC7Y&callback=initMap"></script>
+  </body>
+</html>

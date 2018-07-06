@@ -1,0 +1,138 @@
+<html>
+    <head>
+        <header>
+        <title>SIG Pusat Kesehatan</title>
+        <table>
+            <tr>
+            <td>
+                <img src="https://png.pngtree.com/element_origin_min_pic/04/05/20/1657299a30b925e.jpg" style="width:90px;height:90px;margin:20px;">
+            </td>
+            <td>
+                <h1 style="color:white">SIG Pusat Layanan Kesehatan</h1>
+                <h3 style="color:white">Kota Bandarlampung</h3>
+            </td>
+            </tr>
+        </table>
+        </header>
+        <style>
+        header,footer{
+    font-family: Century Gothic;
+    background-color: rgb(22, 22, 22);
+    padding: 20px;
+}
+
+html, body {
+        font-family: Arial, Helvetica, sans-serif;
+        color: black;
+        background-color: rgb(231, 82, 82);
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        text-align: center;
+}
+#map {
+    margin-left: 15%;
+    background-color: gray;
+    width: 70%;
+    height: 450px;
+}
+
+.navbar {
+    overflow: hidden;
+    background-color:  rgb(14, 13, 13);
+    font-family: Arial, Helvetica, sans-serif;
+    width: 100%;
+}
+
+.navbar a {
+    float: left;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.dropdown {
+    float: left;
+    overflow: hidden;
+}
+
+.dropdown .dropbtn {
+    font-size: 16px;    
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+}
+
+.navbar a:hover, .dropdown:hover .dropbtn {
+    background-color: brown;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+        </style>
+    </head>
+    
+    <body>
+            <div class="navbar">
+                    <a href="home.html">Home</a>
+                    <a href="geojson.html">Peta Persebaran</a>
+                    <div class="dropdown">
+                        <button class="dropbtn">Tipe Layanan Kesehatan
+                        <i class="fa fa-caret-down"></i>
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="rs_clustergeojson.html">Rumah Sakit</a>
+                            <a href="klinik_clustergeojson.html">Klinik</a>
+                            <a href="puskesmas_clustergeojson.html">Puskesmas</a>
+                        </div>      
+                    </div> 
+                    <a href="legenda.html">Pembagian Wilayah</a>
+                    <a href="api_direction.html">Petunjuk Arah</a>
+                    <a href="search.html">Pencarian</a>
+                    <a href="overlay.html">Overlay</a>
+                    <a href="contact.html">Contact</a>
+            </div>
+            <br><br>
+
+            <h2 style="color:white">Selamat Datang!</h2><br>
+            <img src="http://icons.iconarchive.com/icons/graphicloads/medical-health/256/medicine-box-2-icon.png"><br>
+            <h4 style="margin:60px;color:white">Sistem Informasi Geografis Pusat Layanan Kesehatan merupakan sistem yang menyediakan layanan informasi fasilitas kesehatan
+                yang terdapat dalam cakupan wilayah kota Bandarlampung. Dengan adanya sistem ini diharapkan pengguna mampu mengetahui persebaran
+                pembangunan pusat layanan kesehatan di tiap wilayah kota Bandarlampung dengan harapan akses dan layanan kesehatan semakin
+                merata.
+            </h4>
+            <br><br>
+            <footer style="color:white">1617051127 | 1657051001 | 1657051026</footer>
+        </body>
+
+</html>

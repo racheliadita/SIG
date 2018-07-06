@@ -1,0 +1,261 @@
+<html>
+    <head>
+        <header>
+        <title>SIG Pusat Kesehatan</title>
+        <table>
+            <tr>
+            <td>
+                <img src="https://png.pngtree.com/element_origin_min_pic/04/05/20/1657299a30b925e.jpg" 
+                style="width:90px;height:90px;margin:20px;">
+            </td>
+            <td>
+                <h1 style="color:white">SIG Pusat Layanan Kesehatan</h1>
+                <h3 style="color:white">Kota Bandarlampung</h3>
+            </td>
+            </tr>
+        </table>
+        <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+        <script src="script.js"></script>
+        <script src="http://maps.googleapis.com/maps/api/js"></script>
+        </header>
+        <style>
+        header,footer{
+    font-family: Century Gothic;
+    background-color: rgb(22, 22, 22);
+    padding: 20px;
+}
+
+html, body {
+        font-family: Arial, Helvetica, sans-serif;
+        color: black;
+        background-color: rgb(231, 82, 82);
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        text-align: center;
+}
+#map {
+    margin-left: 15%;
+    background-color: gray;
+    width: 70%;
+    height: 450px;
+}
+.btn {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #000000), color-stop(1, #000000));
+	background:-moz-linear-gradient(top, #000000 5%, #000000 100%);
+	background:-webkit-linear-gradient(top, #000000 5%, #000000 100%);
+	background:-o-linear-gradient(top, #000000 5%, #000000 100%);
+	background:-ms-linear-gradient(top, #000000 5%, #000000 100%);
+	background:linear-gradient(to bottom, #000000 5%, #000000 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#000000', endColorstr='#000000',GradientType=0);
+	background-color:#000000;
+	-moz-border-radius:29px;
+	-webkit-border-radius:29px;
+	border-radius:29px;
+	border:1px solid #000000;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:14px;
+	font-weight:bold;
+	padding:17px 31px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #000000;
+}
+.btn:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #000000), color-stop(1, #000000));
+	background:-moz-linear-gradient(top, #000000 5%, #000000 100%);
+	background:-webkit-linear-gradient(top, #000000 5%, #000000 100%);
+	background:-o-linear-gradient(top, #000000 5%, #000000 100%);
+	background:-ms-linear-gradient(top, #000000 5%, #000000 100%);
+	background:linear-gradient(to bottom, #000000 5%, #000000 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#000000', endColorstr='#000000',GradientType=0);
+	background-color:#000000;
+}
+.btn:active {
+	position:relative;
+	top:1px;
+}
+
+.navbar {
+    overflow: hidden;
+    background-color:  rgb(14, 13, 13);
+    font-family: Arial, Helvetica, sans-serif;
+    width: 100%;
+}
+
+.navbar a {
+    float: left;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.dropdown {
+    float: left;
+    overflow: hidden;
+}
+
+.dropdown .dropbtn {
+    font-size: 16px;    
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+}
+
+.navbar a:hover, .dropdown:hover .dropbtn {
+    background-color: brown;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+        </style>
+    </head>
+
+    <body>
+        <div class="navbar">
+            <a href="home.html">Home</a>
+            <a href="geojson.html">Peta Persebaran</a>
+            <div class="dropdown">
+                <button class="dropbtn">Tipe Layanan Kesehatan
+                <i class="fa fa-caret-down"></i>
+                </button>
+                <div class="dropdown-content">
+                    <a href="rs_clustergeojson.html">Rumah Sakit</a>
+                    <a href="klinik_clustergeojson.html">Klinik</a>
+                    <a href="puskesmas_clustergeojson.html">Puskesmas</a>
+                </div>      
+            </div> 
+            <a href="legenda.html">Pembagian Wilayah</a>
+            <a href="api_direction.html">Petunjuk Arah</a>
+            <a href="search.html">Pencarian</a>
+            <a href="overlay.html">Overlay</a>
+            <a href="contact.html">Contact</a>
+    </div>
+    <br><br>
+        <div id="map"></div>
+        <br><br>
+    <table style="margin-left:auto;margin-right:auto">
+        <tr>
+          <div id="btn">
+            <td><a href="Kedaton.html" class="btn">Kec. Kedaton</a></td>
+            <td><a href="Kemiling.html" class="btn">Kec. Kemiling</a></td>
+            <td><a href="Tanjung Karang Pusat.html" class="btn">Kec. Tj Karang Pusat</a></td>
+          </div>
+        </tr>
+    </table>
+        <br><br>
+            <footer style="color:white">1617051127 | 1657051001 | 1657051026</footer>
+    </body>
+
+    <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
+    <script>
+    var map = null;
+    var center = {lat: -5.400549, lng: 105.266272};
+    var infowindow;
+
+    var config = {
+        apiKey: "AIzaSyBImZDo3LYagH34jomPE-g2kkBLklxFoMc",
+        authDomain: "kedaton-18a0c.firebaseapp.com",
+        databaseURL: "https://kedaton-18a0c.firebaseio.com",
+        projectId: "kedaton-18a0c",
+        storageBucket: "kedaton-18a0c.appspot.com",
+        messagingSenderId: "809309591145"
+    };
+    firebase.initializeApp(config);
+
+    var db = firebase.database();
+    var dataRef = db.ref('bandar_lampung');
+
+    dataRef.on('value', showData, showError);
+    function showData(data){
+        // console.log(data.val());
+        map.data.addGeoJson(data.val());
+        map.data.setStyle({
+            strokeColor: 'orange',
+            fillColor: 'yellow',
+            strokeWeight: 0.3
+        });
+        map.data.addListener('click', function(event){
+            infoWindowContent = event.feature.getProperty('DESA');
+            infowindow.setContent(infoWindowContent);
+            infowindow.setPosition(event.latLng);
+            infowindow.open(map);
+        });
+    }
+    function showError(err){
+        console.log(err);
+    }
+
+    function initMap(){
+        var lampung={lat: -4.558585, lng: 105.406808};
+        map = new google.maps.Map(document.getElementById('map'),{
+            zoom: 13,
+            center: center
+        });
+        var infoWin = new google.maps.InfoWindow();
+	// Add some markers to the map.
+	// Note: The code uses the JavaScript Array.prototype.map() method to
+	// create an array of markers based on a given "locations" array.
+	// The map() method here has nothing to do with the Google Maps API.
+	var markers = locations.map(function(location, i) {
+    var marker = new google.maps.Marker({
+        position: location,
+        animation: google.maps.Animation.DROP,
+        icon: "images/health.png"
+        });
+
+    google.maps.event.addListener(marker, 'click', function(evt){
+	infoWin.setContent(location.info);
+	infoWin.open(map, marker);
+	})
+    return marker;
+	});
+    // Add a marker clusterer to manage the markers.
+	var markerCluster = new MarkerClusterer(map, markers, {
+    imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+	});
+    }
+    var locations = [
+        {lat: -5.392139, lng: 105.262335, info: "<h3>RS Advent</h3><p>Alamat: Jl. Teuku Umar No .48, Sidodadi, Kedaton, Surabaya, Kedaton, Kota Bandar Lampung, Lampung 35148<p>Telp: (0721) 703459<br>"}, 
+        {lat: -5.380578, lng: 105.258479, info: "<h3>RSIA Belleza Kedaton Bandar Lampung</h3><p>Alamat: Jl. Sultan H., Labuhan Ratu, Kedaton, Kota Bandar Lampung, Lampung 35132<br><p>Telp: (0721) 773333"},
+        ]
+
+	google.maps.event.addDomListener(window, "load", initMap);
+	</script>
+
+   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCgguC6i63tqFRC_6V86XosB4gCmBM8mRU&callback=initMap"></script>    
+   <script src="src/markerclusterer.js">
+   </script>
+</html>
