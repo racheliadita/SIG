@@ -1,0 +1,247 @@
+<html>
+<head>
+    <header>
+        <title>SIG Pusat Kesehatan</title>
+        <table>
+            <tr>
+            <td>
+                <img src="https://png.pngtree.com/element_origin_min_pic/04/05/20/1657299a30b925e.jpg" style="width:90px;height:90px;margin:20px;">
+            </td>
+            <td>
+                <h1 style="color:white">SIG Pusat Layanan Kesehatan</h1>
+                <h3 style="color:white">Kota Bandarlampung</h3>
+            </td>
+            </tr>
+        </table>
+    </header>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<style>
+    header,footer{
+    font-family: Century Gothic;
+    background-color: rgb(22, 22, 22);
+    padding: 20px;
+}
+
+html, body {
+        font-family: Arial, Helvetica, sans-serif;
+        color: black;
+        background-color: rgb(231, 82, 82);
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        text-align: center;
+}
+#map {
+    margin-left: 15%;
+    background-color: gray;
+    width: 70%;
+    height: 450px;
+}
+
+.navbar {
+    overflow: hidden;
+    background-color:  rgb(14, 13, 13);
+    font-family: Arial, Helvetica, sans-serif;
+    width: 100%;
+}
+
+.navbar a {
+    float: left;
+    font-size: 16px;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.dropdown {
+    float: left;
+    overflow: hidden;
+}
+
+.dropdown .dropbtn {
+    font-size: 16px;    
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+    font-family: inherit;
+    margin: 0;
+}
+
+.navbar a:hover, .dropdown:hover .dropbtn {
+    background-color: brown;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    float: none;
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+</style>
+<script src="http://maps.googleapis.com/maps/api/js"></script>
+
+<body>
+    <div class="navbar">
+        <a href="home.html">Home</a>
+        <a href="geojson.html">Peta Persebaran</a>
+        <div class="dropdown">
+            <button class="dropbtn">Tipe Layanan Kesehatan
+            <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a href="rs_clustergeojson.html">Rumah Sakit</a>
+                <a href="klinik_clustergeojson.html">Klinik</a>
+                <a href="puskesmas_clustergeojson.html">Puskesmas</a>
+            </div>      
+        </div> 
+        <a href="legenda.html">Pembagian Wilayah</a>
+        <a href="api_direction.html">Petunjuk Arah</a>
+        <a href="search.html">Pencarian</a>
+        <a href="overlay.html">Overlay</a>
+        <a href="contact.html">Contact</a>
+</div>
+<br><br>
+
+    <div id = "map"></div>
+
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase.js"></script>
+    <script>
+    var map = null;
+    var center = {lat: -5.387218, lng: 105.261122};
+    var infowindow;
+
+    var config = {
+                apiKey: "AIzaSyBec0nlugp5nDFWCreYwn_M8eg61DeFK0o",
+                authDomain: "geojson-85d68.firebaseapp.com",
+                databaseURL: "https://geojson-85d68.firebaseio.com",
+                projectId: "geojson-85d68",
+                storageBucket: "",
+                messagingSenderId: "858318694931"
+                };
+                firebase.initializeApp(config);
+
+    var db = firebase.database();
+    var dataRef = db.ref('bandar_lampung');
+
+    dataRef.on('value', showData, showError);
+    function showData(data){
+        // console.log(data.val());
+        map.data.addGeoJson(data.val());
+        map.data.setStyle({
+            fillColor: 'yellow',
+            strokeWeight: 0.3
+        });
+        map.data.addListener('click', function(event){
+            infoWindowContent = event.feature.getProperty('DESA');
+            infowindow.setContent(infoWindowContent);
+            infowindow.setPosition(event.latLng);
+            infowindow.open(map);
+        });
+    }
+    function showError(err){
+        console.log(err);
+    }
+
+    function initMap(){
+        var lampung={lat: -4.558585, lng: 105.406808};
+        map = new google.maps.Map(document.getElementById('map'),{
+            zoom: 12,
+            center: center
+        });
+        var infoWin = new google.maps.InfoWindow();
+	// Add some markers to the map.
+	// Note: The code uses the JavaScript Array.prototype.map() method to
+	// create an array of markers based on a given "locations" array.
+	// The map() method here has nothing to do with the Google Maps API.
+	var markers = locations.map(function(location, i) {
+    var marker = new google.maps.Marker({
+        position: location,
+        animation: google.maps.Animation.DROP,
+        icon: "images/puskesmas.png"
+    });
+
+    google.maps.event.addListener(marker, 'click', function(evt){
+	    infoWin.setContent(location.info);
+	    infoWin.open(map, marker);
+	})
+    return marker;
+	});
+    // Add a marker clusterer to manage the markers.
+	var markerCluster = new MarkerClusterer(map, markers, {
+    imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+	});
+    }
+    var locations = [   
+    {lat: -5.403112, lng: 105.260396, info: "<h3>Puskesmas Rawat Inap Kedaton</h3><p>Alamat: Jl. Teuku Umar No.62, Sawah Brebes, Tj. Karang Tim., Kota Bandar Lampung, Lampung 35121<br><p>Telp: - <br>"}, 
+        {lat: -5.407281, lng: 105.263675, info: "<h3>Puskesmas Kampung Sawah</h3><br><p>Alamat: Jl. Arjuna No.4, Sawah Lama, Tj. Karang Tim., Kota Bandar Lampung, Lampung 35125<br><p>Telp: (0721) 273601 <br>"}, 
+        {lat: -5.414479, lng: 105.261125, info: "<h3>Puskesmas Kebun Jahe Enggal</h3><br><p>Alamat: Jl. Kamboja No.32, Enggal, Engal, Kota Bandar Lampung, Lampung 35128<br><p>Telp: (0721) 255074 <br>"}, 
+        {lat: -5.400293, lng: 105.244576, info: "<h3>Puskesmas Gedong Air</h3><br><p>Alamat: Jl. Sisingamangaraja, Gedong Air, Tj. Karang Bar., Kota Bandar Lampung, Lampung 35118<br><p>Telp: - <br>"},
+        {lat: -5.457538, lng: 105.257925, info: "<h3>Puskesmas Rawat Inap Kota Karang</h3><br><p>Alamat: Jl. Tlk. Ratai No.16, Kota Karang, Tlk. Betung Tim., Kota Bandar Lampung, Lampung 35231<br><p>Telp: (0721) 480129 <br>"},
+        {lat: -5.350504, lng: 105.255774, info: "<h3>Puskesmas Pembantu Labuhan Dalam</h3><br><p>Alamat: Jl. Mawar Indah No.1, Labuhan Dalam, Tj. Senang, Kota Bandar Lampung, Lampung 35141<br><p>Telp: 0815-4182-429 <br>"},
+        {lat: -5.359733, lng: 105.253972, info: "<h3>Puskesmas Labuhan Ratu</h3><p>Alamat: Jl. Soekarno - Hatta, Kp. Baru, Kedaton, Kota Bandar Lampung, Lampung 35141<br><p>Telp: 0853-8278-6227 <br>"}, 
+        {lat: -5.348539, lng: 105.293539, info: "<h3>Puskesmas Pembantu Way Kandis II</h3><p>Alamat: Jl. Ratu Dibalau, Way Kandis, Tj. Senang, Kota Bandar Lampung, Lampung 35131<br><p>Telp: - <br>"}, 
+        {lat: -5.359904, lng: 105.289849, info: "<h3>Puskesmas Way Kandis</h3><p>Alamat: Jalan Pulau Damar Gang Pulau Panggung No.90, Perumnas Way Kandis, Tj. Senang, Kota Bandar Lampung, Lampung 35131<br><p>Telp: - <br>"}, 
+        {lat: -5.362553, lng: 105.289420, info: "<h3>Puskesmas Rawat Inap Way Kandis</h3><p>Alamat: Jl. Pulau Damar No.8, Perumnas Way Kandis, Tj. Senang, Kota Bandar Lampung, Lampung 35131<br><p>Telp: - <br>"}, 
+        {lat: -5.371441, lng: 105.297144, info: "<h3>Puskesmas Campang Raya</h3><p>Alamat: Jl. Ryacudu No.39, Harapan Jaya, Sukarame, Kota Bandar Lampung, Lampung 35131<br><p>Telp: (0721) 350315 <br>"}, 
+        {lat: -5.372808, lng: 105.290793, info: "<h3>Puskesmas Way Dadi</h3><p>Alamat: Jl. Pulau Damar No.55, Way Dadi, Sukarame, Kota Bandar Lampung, Lampung 35141<br><p>Telp: (0721) 350315 <br>"}, 
+        {lat: -5.386053, lng: 105.292510, info: "<h3>Puskesmas Sukarame</h3><p>Alamat: Jl. Endro Suratmin No.28, Sukarame, Kota Bandar Lampung, Lampung 35131<br><p>Telp: (0721) 787695 <br>"}, 
+        {lat: -5.373833, lng: 105.274914, info: "<h3>Puskesmas Way Halim</h3><p>Alamat: Jl. Raja Basa III No.3, Perumnas Way Halim, Way Halim, Kota Bandar Lampung, Lampung 35142<br><p>Telp: (0721) 772816 <br>"}, 
+        {lat: -5.373064, lng: 105.259894, info: "<h3>Puskesmas Purbolinggo</h3><p>Alamat: Jl.Nusantara Raya No.4, Labuhan Ratu, Kedaton, Kota Bandar Lampung, Lampung 35136<br><p>Telp: (0725) 7631324 <br>"}, 
+        {lat: -5.378266, lng: 105.251526, info: "<h3>Puskesmas ZA Pagar Alam</h3><p>Alamat: Jl. Zainal Abidin Pagar Alam No.27, Labuhan Ratu, Kedaton, Kota Bandar Lampung, Lampung 35132<br><p>Telp: - <br>"}, 
+        {lat: -5.367584, lng: 105.238051, info: "<h3>Puskesmas Pembantu</h3><p>Alamat: Jl. Zainal Abidin Pagar Alam, Rajabasa, Kota Bandar Lampung, Lampung 35144<br><p>Telp: - <br>"}, 
+        {lat: -5.372028, lng: 105.233502, info: "<h3>Puskesmas Pembantu Tangkil</h3><p>Alamat: Jl. Zainal Abidin Pagar Alam No.27, Labuhan Ratu, Kedaton, Kota Bandar Lampung, Lampung 35132<br><p>Telp: - <br>"}, 
+        {lat: -5.372455, lng: 105.227150, info: "<h3>Puskesmas Rajabasa Indah RBI</h3><p>Alamat: Rajabasa, Kota Bandar Lampung, Lampung 35152<br><p>Telp: (0721) 8011767 <br>"}, 
+        {lat: -5.400814, lng: 105.231023, info: "<h3>Puskesmas Susunan Baru</h3><p>Alamat: Jl. Sultan Badarudin, Susunan Baru, Tj. Karang Bar., Kota Bandar Lampung, Lampung 35115<br><p>Telp: (0721) 257656 <br>"}, 
+        {lat: -5.396029, lng: 105.212226, info: "<h3>Puskesmas Beringin Raya</h3><p>Alamat: Jalan Minak Sangaji No. 01, Kemiling, Beringin Raya, Kemiling, Kota Bandar Lampung, Lampung 35155<br><p>Telp: (0721) 272038 <br>"}, 
+        {lat: -5.403164, lng: 105.201883, info: "<h3Puskesmas Kemiling</h3><p>Alamat: Beringin Raya, Kemiling, Kota Bandar Lampung, Lampung 35155<br><p>Telp: - <br>"}, 
+        {lat: -5.430747, lng: 105.325559, info: "<h3>Puskesmas Way Laga</h3><p>Alamat: Jl. Insinyur Sutami, Way Gubak, Panjang, Kota Bandar Lampung, Lampung 35244<br><p>Telp: (0721) 351054 <br>"}, 
+        {lat: -5.477146, lng: 105.322653, info: "<h3>Puskesmas Panjang</h3><p>Alamat: Jalan Laksamana Yos Sudarso No.384, Kecamatan Panjang Selatan, Kelurahan Panjang, Panjang Sel., Bandar Lampung, Kota Bandar Lampung, Lampung 35146<br><p>Telp: (0721) 342087 <br>"}, 
+        {lat: -5.443697, lng: 105.289846, info: "<h3>Puskesmas Sukaraja</h3><p>Alamat: Jl. Yos Sudarso No.242, Sukaraja, Bumi Waras, Kota Bandar Lampung, Lampung 35226<br><p>Telp: (0721) 472565 <br>"}, 
+        {lat: -5.457411, lng: 105.257917, info: "<h3>Puskesmas Kota Karang</h3><p>Alamat: Komplek Kota Karang, Jl. Teluk Ratai No. 18, Kota Karang, Teluk Betung Timur, Kota Karang, Tlk. Betung Tim., Kota Bandar Lampung, Lampung<br><p>Telp: (0721) 480129 <br>"}, 
+        {lat: -5.454676, lng: 105.248132, info: "<h3>Puskesmas Bakung</h3><p>Alamat: Jl. Kamboja Blok AA No.07, Bakung, Tlk. Betung Bar., Kota Bandar Lampung, Lampung 35238<br><p>Telp: 0812-7901-508 <br>"}, 
+        {lat: -5.435961, lng: 105.249348, info: "<h3>Puskesmas Pembantu Sumur Putri</h3><p>Alamat: Jalan Pangeran Emir Moeh Noor, Sumur Putri, Tlk. Betung Utara, Kota Bandar Lampung, Lampung 35211<br><p>Telp: - <br>"}, 
+        {lat: -5.386431, lng: 105.292487, info: "<h3>Puskesmas Sukarame</h3><p>Alamat: Jl. Endro Suratmin No.28, Sukarame, Kota Bandar Lampung, Lampung 35131<br><p>Telp: (0721) 787695 <br>"}, 
+        {lat: -5.385406, lng: 105.304178, info: "<h3>Puskesmas Permata Sukarame</h3><p>Alamat: Jl. Pulau Sebesi No.83, Sukarame, Kota Bandar Lampung, Lampung 35131<br><p>Telp: - <br>"}, 
+        {lat: -5.397935, lng: 105.299104, info: "<h3>Puskesmas Sukabumi</h3><p>Alamat: Jl. Pulau Bangka No.13, Sukabumi, Kec. Sukabumi, Kota Bandar Lampung, Lampung 35122<br><p>Telp: (0721) 481292 <br>"}, 
+        {lat: -5.419491, lng: 105.226947, info: "<h3>Puskesmas Pembantu Sukadanaham</h3><p>Alamat: Jalan H. Agus Salim, Sukadana Ham, Tj. Karang Bar., Kota Bandar Lampung, Lampung 35215<br><p>Telp: - <br>"}, 
+        {lat: -5.418254, lng: 105.325837, info: "<h3>Puskesmas Pembantu Campang</h3><p>Alamat: Jl. Amd, Campang Raya, Tj. Karang Tim., Kota Bandar Lampung, Lampung 35122<br><p>Telp: - <br>"}, 
+        {lat: -5.414580, lng: 105.248676, info: "<h3>Puskesmas Palapa</h3><p>Alamat: Gang Hidayah Jl. Cut Nyak Dien, Palapa, Tj. Karang Pusat, Kota Bandar Lampung, Lampung 35112<br><p>Telp: - <br>"}, 
+               ]
+	google.maps.event.addDomListener(window, "load", initMap);
+	</script>
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAyzRiYQigoKlPdVkq_LjxjhRDePNVOC7Y&callback=initMap"></script>    
+    <script src="src/markerclusterer.js">
+    </script>
+    
+<br><br>
+<footer style="color:white">1617051127 | 1657051001 | 1657051026</footer>
+</body>
+</html>
